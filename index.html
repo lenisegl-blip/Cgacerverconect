@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#276b35">
+<title>CGACERV CONNECT</title>
+<style>
+:root{--green:#276b35;--dark:#183b22;--cream:#f3eedc;--panel:#fffdf4;--ink:#263326}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;background:linear-gradient(180deg,#9bcf76 0,#dcebb7 38%,#f3eedc 38%);font-family:system-ui,-apple-system,Segoe UI,sans-serif;color:var(--ink);padding:24px 14px}
+main{max-width:520px;margin:0 auto}
+header{text-align:center;padding:18px 10px 22px;color:#17391f;text-shadow:1px 1px #fff}
+.logo{font-size:clamp(27px,7vw,40px);font-weight:1000;letter-spacing:1px}
+.subtitle{font-weight:700;letter-spacing:2px;font-size:12px}
+.card{background:var(--panel);border:4px solid var(--dark);box-shadow:7px 7px 0 #315b31;border-radius:8px;padding:20px;margin-bottom:18px}
+h1{font-size:20px;margin:0 0 14px}
+label{display:block;font-weight:800;margin:12px 0 6px}
+input{width:100%;padding:13px;border:3px solid #78946b;border-radius:5px;font-size:16px;background:#fff}
+button{width:100%;border:0;border-bottom:5px solid #174b26;background:#328447;color:white;font-size:16px;font-weight:900;padding:14px;border-radius:5px;margin-top:12px;cursor:pointer}
+button:active{transform:translateY(2px);border-bottom-width:3px}
+.secondary{background:#d9e8c9;color:#183b22;border:2px solid #315b31;border-bottom-width:4px}
+.server{background:#eef4e5;border:2px dashed #73936a;border-radius:5px;padding:12px;overflow-wrap:anywhere;font-family:ui-monospace,monospace;font-size:14px}
+.small{font-size:12px;line-height:1.5;color:#4b5b48}
+.notice{background:#fff3ce;border-left:5px solid #d29b21;padding:12px;font-size:13px;line-height:1.5}
+#status{min-height:22px;font-weight:700;color:#276b35;text-align:center;margin-top:10px}
+footer{text-align:center;font-size:12px;color:#52634d;padding:8px}
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="logo">⛏ CGACERV CONNECT</div>
+  <div class="subtitle">SEU GRUPO • SEU MUNDO • SUA AVENTURA</div>
+</header>
+<section class="card">
+  <h1>👤 Identifique-se</h1>
+  <label for="nickname">Seu apelido no Minecraft</label>
+  <input id="nickname" maxlength="24" placeholder="Digite seu apelido" autocomplete="nickname">
+  <button id="enter">ENTRAR NO PORTAL</button>
+  <div id="welcome" class="small"></div>
+</section>
+<section class="card">
+  <h1>🟩 Minecraft Bedrock</h1>
+  <div class="server" id="bedrock">cgacerv-oficial-c10750.bedrock.shulkerboxes.com</div>
+  <p class="small">Porta padrão informada para Bedrock: 19132. Confirme no painel da Shulkerboxes caso tenha sido alterada.</p>
+  <button id="copyBedrock">COPIAR ENDEREÇO + PORTA</button>
+  <button class="secondary" id="copyHost">COPIAR SOMENTE ENDEREÇO</button>
+</section>
+<section class="card">
+  <h1>🟦 Minecraft Java</h1>
+  <div class="server" id="java">cgacerv-oficial-c10750.play.shulkerboxes.com</div>
+  <button class="secondary" id="copyJava">COPIAR ENDEREÇO JAVA</button>
+</section>
+<section class="card">
+  <h1>🎮 Como entrar pelo Switch</h1>
+  <ol class="small">
+    <li>Toque em “COPIAR ENDEREÇO + PORTA”.</li>
+    <li>Abra o BedrockTogether no iPhone.</li>
+    <li>Cole o endereço e informe a porta 19132.</li>
+    <li>Inicie a conexão e, no Switch, entre pelo servidor LAN que aparecer.</li>
+  </ol>
+  <div class="notice"><b>Importante:</b> este portal organiza e copia os dados do servidor. Ele não substitui o BedrockTogether nem cria uma ponte de rede sozinho. Para conectar sem o aplicativo, seria necessário hospedar uma ponte UDP compatível.</div>
+  <div id="status" role="status" aria-live="polite"></div>
+</section>
+<footer>CGACERV CONNECT • Portal do grupo</footer>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const host = "cgacerv-oficial-c10750.bedrock.shulkerboxes.com";
+const java = "cgacerv-oficial-c10750.play.shulkerboxes.com";
+function status(msg){$("status").textContent=msg;}
+$("enter").addEventListener("click",()=>{
+  const name=$("nickname").value.trim();
+  if(!name){$("welcome").textContent="Digite seu apelido para continuar.";return;}
+  $("welcome").textContent="Bem-vindo(a), "+name+"! Os dados do servidor estão prontos.";
+  status("Portal aberto para "+name+".");
+});
+async function copy(text,label){
+  try{
+    await navigator.clipboard.writeText(text);
+    status(label+" copiado!");
+  }catch(e){
+    const t=document.createElement("textarea");t.value=text;document.body.appendChild(t);t.select();
+    try{document.execCommand("copy");status(label+" copiado!");}
+    catch(err){status("Não foi possível copiar automaticamente. Selecione e copie o endereço.");}
+    t.remove();
+  }
+}
+$("copyBedrock").addEventListener("click",()=>copy(host+":19132","Endereço Bedrock"));
+$("copyHost").addEventListener("click",()=>copy(host,"Endereço Bedrock"));
+$("copyJava").addEventListener("click",()=>copy(java,"Endereço Java"));
+</script>
+</body>
+</html>
